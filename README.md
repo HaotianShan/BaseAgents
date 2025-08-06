@@ -30,6 +30,41 @@ load_dotenv()
 
 model = ChatMistralAI(
     model="mistral-large-latest",
+    api_key=os.getenv("MISTRAL_API_KEY")
+)
+
+# Simple MCP tools configuration
+mcp_tools = {
+    "web_scraper": {
+        "command": "npx",
+        "args": ["@modelcontextprotocol/server-puppeteer"],
+        "transport": "stdio",
+    },
+}
+
+# Create agent with MCP tools
+agent = create_agent_tool(
+    model,
+    mcp_tools=mcp_tools,
+    system_prompt="You can browse the web using tools.",
+)
+
+# Synchronous example
+response = agent.invoke("Use the web scraper to get the title of example.com")
+print("Response:", response)
+```
+
+### Advanced Usage
+```python
+from base_agents import create_agent_tool
+import os
+from dotenv import load_dotenv
+from langchain_mistralai import ChatMistralAI
+
+load_dotenv()
+
+model = ChatMistralAI(
+    model="mistral-large-latest",
     api_key=os.getenv("MISTRAL_API_KEY"),
     verbose=True
 )
